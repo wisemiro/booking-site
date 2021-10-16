@@ -15,17 +15,19 @@ import (
 const port = ":8000"
 
 var app config.AppConfig
+var sessions *scs.SessionManager
 
 func main() {
 	//config
 	app.InProduction = false //change to true in production.
 
 	//sessions
-	sessions := scs.New()
+	sessions = scs.New()
 	sessions.Lifetime = 24 * time.Hour
 	sessions.Cookie.Persist = true
 	sessions.Cookie.Secure = app.InProduction
 	sessions.Cookie.SameSite = http.SameSiteLaxMode
+	app.Sessions = sessions
 
 	//templates
 	tc, err := renders.CreateTemplateCache()

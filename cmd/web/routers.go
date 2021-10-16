@@ -12,7 +12,7 @@ import (
 func routes(app *config.AppConfig) http.Handler {
 
 	mux := chi.NewRouter()
-	mux.Use(middleware.Recoverer, middleware.Logger, crsfToken)
+	mux.Use(middleware.Recoverer, middleware.Logger, CrsfToken, LoadSession)
 	mux.Get("/", handlers.Repo.Home)
 
 	return mux
