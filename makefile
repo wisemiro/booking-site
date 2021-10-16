@@ -3,3 +3,4 @@ win:
 
 unix:
 	go run ./cmd/web/ *.go
+	
