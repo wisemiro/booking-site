@@ -35,7 +35,7 @@ func RenderTemplates(w http.ResponseWriter, tmpl string, td *models.TemplateData
 	}
 	buf := new(bytes.Buffer)
 
-	_ = t.Execute(buf, nil)
+	_ = t.Execute(buf, td)
 
 	_, err := buf.WriteTo(w)
 
