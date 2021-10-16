@@ -7,14 +7,27 @@ import (
 	"learn/pkgs/renders"
 	"log"
 	"net/http"
+	"time"
+
+	"github.com/alexedwards/scs/v2"
 )
 
 const port = ":8000"
 
+var app config.AppConfig
+
 func main() {
 	//config
-	var app config.AppConfig
+	app.InProduction = false //change to true in production.
 
+	//sessions
+	sessions := scs.New()
+	sessions.Lifetime = 24 * time.Hour
+	sessions.Cookie.Persist = true
+	sessions.Cookie.Secure = app.InProduction
+	sessions.Cookie.SameSite = http.SameSiteLaxMode
+
+	//templates
 	tc, err := renders.CreateTemplateCache()
 	if err != nil {
 		log.Fatal("Cant create cache", err)

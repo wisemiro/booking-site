@@ -11,7 +11,7 @@ func crsfToken(next http.Handler) http.Handler {
 	crsfHandler.SetBaseCookie(
 		http.Cookie{
 			HttpOnly: true,
-			Secure: false,
+			Secure: app.InProduction,
 			Path: "/", 
 			SameSite: http.SameSiteLaxMode,
 
