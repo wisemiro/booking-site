@@ -27,10 +27,13 @@ func main() {
 	repo := handlers.NewRepo(&app)
 	handlers.NewHandlers(repo)
 
-	//urls
-	http.HandleFunc("/", handlers.Repo.Home)
-
 	//server
 	fmt.Printf("started server on %s", port)
-	http.ListenAndServe(port, nil)
+	serzer := http.Server{
+		Addr:    port,
+		Handler: routes(&app),
+	}
+	err = serzer.ListenAndServe()
+	log.Fatal(err)
+
 }
