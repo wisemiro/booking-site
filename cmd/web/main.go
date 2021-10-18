@@ -43,7 +43,7 @@ func main() {
 	handlers.NewHandlers(repo)
 
 	//server
-	fmt.Printf("started server on %s", port)
+	fmt.Printf("started server on localhost%s", port)
 	serzer := http.Server{
 		Addr:    port,
 		Handler: routes(&app),
