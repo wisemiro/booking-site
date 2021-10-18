@@ -1,8 +1,8 @@
 package main
 
 import (
-	"learn/pkgs/config"
-	"learn/pkgs/handlers"
+	"github.com/wycemiro/booking-site/pkgs/config"
+	"github.com/wycemiro/booking-site/pkgs/handlers"
 	"net/http"
 
 	"github.com/go-chi/chi/v5"

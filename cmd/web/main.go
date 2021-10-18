@@ -2,9 +2,9 @@ package main
 
 import (
 	"fmt"
-	"learn/pkgs/config"
-	"learn/pkgs/handlers"
-	"learn/pkgs/renders"
+	"github.com/wycemiro/booking-site/pkgs/config"
+	"github.com/wycemiro/booking-site/pkgs/handlers"
+	"github.com/wycemiro/booking-site/pkgs/renders"
 	"log"
 	"net/http"
 	"time"
@@ -19,7 +19,7 @@ var sessions *scs.SessionManager
 
 func main() {
 	//config
-	app.InProduction = false //change to true in production.
+	app.InProduction = false //change to true in production, to change secure = true.
 
 	//sessions
 	sessions = scs.New()

@@ -3,8 +3,8 @@ package renders
 import (
 	"bytes"
 	"fmt"
-	"learn/pkgs/config"
-	"learn/pkgs/models"
+	"github.com/wycemiro/booking-site/pkgs/config"
+	"github.com/wycemiro/booking-site/pkgs/models"
 	"log"
 	"net/http"
 	"path/filepath"

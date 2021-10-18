@@ -1,9 +1,9 @@
 package handlers
 
 import (
-	"learn/pkgs/config"
-	"learn/pkgs/models"
-	"learn/pkgs/renders"
+	"github.com/wycemiro/booking-site/pkgs/config"
+	"github.com/wycemiro/booking-site/pkgs/models"
+	"github.com/wycemiro/booking-site/pkgs/renders"
 	"net/http"
 )
 
