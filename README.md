@@ -1,4 +1,4 @@
-#Boking and reservation web-app build in golang.
+# Boking and reservation web-app build in golang.
 Uses:
 - Go version 1.16
 - The [chi router](https://github.com/go-chi/chi/v5) for handling routing.
