@@ -14,6 +14,9 @@ func routes(app *config.AppConfig) http.Handler {
 	mux := chi.NewRouter()
 	mux.Use(middleware.Recoverer, middleware.Logger, CrsfToken, LoadSession)
 	mux.Get("/", handlers.Repo.Home)
+	//get static images from static dir
+	fileServer := http.FileServer(http.Dir("./static/"))
+	mux.Handle("/static/*", http.StripPrefix("/static", fileServer))
 
 	return mux
 }
