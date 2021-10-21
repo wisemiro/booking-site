@@ -1,10 +1,13 @@
 package handlers
 
 import (
+	"encoding/json"
+	"log"
+	"net/http"
+
 	"github.com/wycemiro/booking-site/pkgs/config"
 	"github.com/wycemiro/booking-site/pkgs/models"
 	"github.com/wycemiro/booking-site/pkgs/renders"
-	"net/http"
 )
 
 //Repo the repository used by the handlers
@@ -54,10 +57,29 @@ func (b *Repository) SearchAvailability(w http.ResponseWriter, r *http.Request) 
 
 //post search-availability
 func (b *Repository) PostAvailability(w http.ResponseWriter, r *http.Request) {
-	w.Write([]byte("Posted to search availability"))
+
 }
 
 //General is handler for the generals page.
 func (b *Repository) General(w http.ResponseWriter, r *http.Request) {
 	renders.RenderTemplates(w, r, "generals.page.tmpl", &models.TemplateData{})
+}
+
+type jsonResp struct {
+	OK      bool   `json:"ok"`
+	Message string `json:"message"`
+}
+
+//AvailabilityJson handles req for availability and retuns json
+func (b *Repository) AvailabilityJson(w http.ResponseWriter, r *http.Request) {
+	resp := jsonResp{
+		OK:      true,
+		Message: "Available!",
+	}
+	out, err := json.Marshal(resp)
+	if err != nil {
+		log.Fatal(err)
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(out)
 }
