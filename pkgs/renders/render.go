@@ -3,12 +3,14 @@ package renders
 import (
 	"bytes"
 	"fmt"
-	"github.com/wycemiro/booking-site/pkgs/config"
-	"github.com/wycemiro/booking-site/pkgs/models"
 	"log"
 	"net/http"
 	"path/filepath"
 	"text/template"
+
+	"github.com/justinas/nosurf"
+	"github.com/wycemiro/booking-site/pkgs/config"
+	"github.com/wycemiro/booking-site/pkgs/models"
 )
 
 var functions = template.FuncMap{}
@@ -18,12 +20,13 @@ func CreateTemplates(a *config.AppConfig) {
 	app = a
 }
 
-func AddDefaultData(td *models.TemplateData) *models.TemplateData {
+func AddDefaultData(td *models.TemplateData, r *http.Request) *models.TemplateData {
+	td.CRSFToken = nosurf.Token(r)
 	return td
 }
 
 //renderTemplates finds the templates
-func RenderTemplates(w http.ResponseWriter, tmpl string, td *models.TemplateData) {
+func RenderTemplates(w http.ResponseWriter, r *http.Request, tmpl string, td *models.TemplateData) {
 	var tc map[string]*template.Template
 	//render according to bool values in app.UseCache
 	if app.UseCache {
@@ -38,7 +41,7 @@ func RenderTemplates(w http.ResponseWriter, tmpl string, td *models.TemplateData
 		log.Fatal("Cant create temp")
 	}
 	buf := new(bytes.Buffer)
-	td = AddDefaultData(td)
+	td = AddDefaultData(td, r)
 
 	_ = t.Execute(buf, td)
 

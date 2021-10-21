@@ -29,30 +29,35 @@ func NewHandlers(r *Repository) {
 
 //Home is handler for the home page
 func (b *Repository) Home(w http.ResponseWriter, r *http.Request) {
-	renders.RenderTemplates(w, "home.page.tmpl", &models.TemplateData{})
+	renders.RenderTemplates(w, r, "home.page.tmpl", &models.TemplateData{})
 }
 
 //About is handler for the about page.
 func (b *Repository) About(w http.ResponseWriter, r *http.Request) {
-	renders.RenderTemplates(w, "about.page.tmpl", &models.TemplateData{})
+	renders.RenderTemplates(w, r, "about.page.tmpl", &models.TemplateData{})
 }
 
 //Contact is handler for contact page.
 func (b *Repository) Contact(w http.ResponseWriter, r *http.Request) {
-	renders.RenderTemplates(w, "contact.page.tmpl", &models.TemplateData{})
+	renders.RenderTemplates(w, r, "contact.page.tmpl", &models.TemplateData{})
 }
 
 //Major
 func (b *Repository) Major(w http.ResponseWriter, r *http.Request) {
-	renders.RenderTemplates(w, "majors.page.tmpl", &models.TemplateData{})
+	renders.RenderTemplates(w, r, "majors.page.tmpl", &models.TemplateData{})
 }
 
 //search-availability
 func (b *Repository) SearchAvailability(w http.ResponseWriter, r *http.Request) {
-	renders.RenderTemplates(w, "home.page.tmpl", &models.TemplateData{})
+	renders.RenderTemplates(w, r, "search-availability.page.tmpl", &models.TemplateData{})
+}
+
+//post search-availability
+func (b *Repository) PostAvailability(w http.ResponseWriter, r *http.Request) {
+	w.Write([]byte("Posted to search availability"))
 }
 
 //General is handler for the generals page.
 func (b *Repository) General(w http.ResponseWriter, r *http.Request) {
-	renders.RenderTemplates(w, "generals.page.tmpl", &models.TemplateData{})
+	renders.RenderTemplates(w, r, "generals.page.tmpl", &models.TemplateData{})
 }
