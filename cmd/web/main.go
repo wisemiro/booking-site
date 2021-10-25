@@ -2,12 +2,13 @@ package main
 
 import (
 	"fmt"
-	"github.com/wycemiro/booking-site/pkgs/config"
-	"github.com/wycemiro/booking-site/pkgs/handlers"
-	"github.com/wycemiro/booking-site/pkgs/renders"
 	"log"
 	"net/http"
 	"time"
+
+	"github.com/wycemiro/booking-site/internal/config"
+	"github.com/wycemiro/booking-site/internal/handlers"
+	"github.com/wycemiro/booking-site/internal/renders"
 
 	"github.com/alexedwards/scs/v2"
 )

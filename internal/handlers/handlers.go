@@ -5,9 +5,9 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/wycemiro/booking-site/pkgs/config"
-	"github.com/wycemiro/booking-site/pkgs/models"
-	"github.com/wycemiro/booking-site/pkgs/renders"
+	"github.com/wycemiro/booking-site/internal/config"
+	"github.com/wycemiro/booking-site/internal/models"
+	"github.com/wycemiro/booking-site/internal/renders"
 )
 
 //Repo the repository used by the handlers
