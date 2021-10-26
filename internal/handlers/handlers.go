@@ -106,11 +106,13 @@ func (b *Repository) PostReservation(w http.ResponseWriter, r *http.Request) {
 	reservation := models.Reservation{
 		FirstName: r.Form.Get("first_name"),
 		LastName:  r.Form.Get("last_name"),
-		Phone:     r.Form.Get("phone"),
 		Email:     r.Form.Get("email"),
 	}
 	form := forms.New(r.PostForm)
-	form.Has("first_name", r)
+
+	form.Required("first_name", "last_name", "email", "phone")
+	form.MinLength("first_name", 4, r)
+
 	if !form.Valid() {
 		data := make(map[string]interface{})
 		data["reservation"] = reservation
