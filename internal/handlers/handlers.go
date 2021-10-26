@@ -6,6 +6,7 @@ import (
 	"net/http"
 
 	"github.com/wycemiro/booking-site/internal/config"
+	"github.com/wycemiro/booking-site/internal/forms"
 	"github.com/wycemiro/booking-site/internal/models"
 	"github.com/wycemiro/booking-site/internal/renders"
 )
@@ -82,4 +83,17 @@ func (b *Repository) AvailabilityJson(w http.ResponseWriter, r *http.Request) {
 	}
 	w.Header().Set("Content-Type", "application/json")
 	w.Write(out)
+}
+
+//Reservation renders reservation page
+func (b *Repository) Reservation(w http.ResponseWriter, r *http.Request) {
+	renders.RenderTemplates(w, r, "make-reservation.page.tmpl", &models.TemplateData{
+		Form: forms.New(nil),
+	})
+
+}
+
+//PostReservation posts a reservation
+func (b *Repository) PostReservation(w http.ResponseWriter, r *http.Request) {
+
 }
