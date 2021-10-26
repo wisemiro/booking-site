@@ -87,10 +87,13 @@ func (b *Repository) AvailabilityJson(w http.ResponseWriter, r *http.Request) {
 
 //Reservation renders reservation page
 func (b *Repository) Reservation(w http.ResponseWriter, r *http.Request) {
+	var emptyReservation models.Reservation
+	data := make(map[string]interface{})
+	data["reservation"] = emptyReservation
 	renders.RenderTemplates(w, r, "make-reservation.page.tmpl", &models.TemplateData{
 		Form: forms.New(nil),
+		Data: data,
 	})
-
 }
 
 //PostReservation posts a reservation
