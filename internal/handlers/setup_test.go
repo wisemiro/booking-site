@@ -50,7 +50,7 @@ func getRoutes() http.Handler {
 	NewHandlers(repo)
 	renders.CreateTemplates(&app)
 	mux := chi.NewRouter()
-	mux.Use(middleware.Recoverer, middleware.Logger, CrsfToken, LoadSession)
+	mux.Use(middleware.Recoverer, middleware.Logger, LoadSession)
 
 	//routes
 	mux.Get("/", Repo.Home)
