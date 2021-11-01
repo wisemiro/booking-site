@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/gob"
 	"fmt"
 	"log"
 	"net/http"
@@ -8,6 +9,7 @@ import (
 
 	"github.com/wycemiro/booking-site/internal/config"
 	"github.com/wycemiro/booking-site/internal/handlers"
+	"github.com/wycemiro/booking-site/internal/models"
 	"github.com/wycemiro/booking-site/internal/renders"
 
 	"github.com/alexedwards/scs/v2"
@@ -19,6 +21,8 @@ var app config.AppConfig
 var sessions *scs.SessionManager
 
 func main() {
+	gob.Register(models.Reservation{})
+
 	//config
 	app.InProduction = false //change to true in production, to change secure = true.
 

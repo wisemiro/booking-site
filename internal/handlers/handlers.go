@@ -123,5 +123,10 @@ func (b *Repository) PostReservation(w http.ResponseWriter, r *http.Request) {
 		})
 		return
 	}
+	b.App.Sessions.Put(r.Context(), "reservation", reservation)
+	http.Redirect(w, r, "/reservation-summary", http.StatusSeeOther)
+}
 
+func (b *Repository) ReservationSummary(w http.ResponseWriter, r *http.Request) {
+	renders.RenderTemplates(w, r, "generals.page.tmpl", &models.TemplateData{})
 }
