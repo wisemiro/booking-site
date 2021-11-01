@@ -6,3 +6,9 @@ unix:
 	
 tidy:
 	go mod tidy
+
+test-win:
+	go test -v .\cmd\web\ 
+
+test-unix:
+	go test -v ./cmd/web/ 
