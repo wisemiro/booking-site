@@ -21,6 +21,27 @@ var app config.AppConfig
 var sessions *scs.SessionManager
 
 func main() {
+
+	err := run()
+	if err != nil {
+		log.Fatal(err)
+	}
+	renders.CreateTemplates(&app)
+	repo := handlers.NewRepo(&app)
+	handlers.NewHandlers(repo)
+
+	//server
+	fmt.Printf("started server on localhost%s", port)
+	serzer := http.Server{
+		Addr:    port,
+		Handler: routes(&app),
+	}
+	err = serzer.ListenAndServe()
+	log.Fatal(err)
+
+}
+
+func run() error {
 	gob.Register(models.Reservation{})
 
 	//config
@@ -42,18 +63,5 @@ func main() {
 
 	app.TemplateCache = tc
 	app.UseCache = false //if set to true use cache on disk else=false read from file
-
-	renders.CreateTemplates(&app)
-	repo := handlers.NewRepo(&app)
-	handlers.NewHandlers(repo)
-
-	//server
-	fmt.Printf("started server on localhost%s", port)
-	serzer := http.Server{
-		Addr:    port,
-		Handler: routes(&app),
-	}
-	err = serzer.ListenAndServe()
-	log.Fatal(err)
-
+	return nil
 }
