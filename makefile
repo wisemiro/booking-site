@@ -7,8 +7,11 @@ unix:
 tidy:
 	go mod tidy
 
-test-win:
+test-main-win:
 	go test -v .\cmd\web\ 
 
-test-unix:
+test-main-unix:
 	go test -v ./cmd/web/ 
+
+test-handler-win:
+	go test -v .\internal\handlers\

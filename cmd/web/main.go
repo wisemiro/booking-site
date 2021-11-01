@@ -26,9 +26,6 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	renders.CreateTemplates(&app)
-	repo := handlers.NewRepo(&app)
-	handlers.NewHandlers(repo)
 
 	//server
 	fmt.Printf("started server on localhost%s", port)
@@ -63,5 +60,9 @@ func run() error {
 
 	app.TemplateCache = tc
 	app.UseCache = false //if set to true use cache on disk else=false read from file
+	renders.CreateTemplates(&app)
+	repo := handlers.NewRepo(&app)
+	handlers.NewHandlers(repo)
+
 	return nil
 }
