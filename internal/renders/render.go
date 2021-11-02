@@ -2,8 +2,8 @@ package renders
 
 import (
 	"bytes"
+	"errors"
 	"fmt"
-	"log"
 	"net/http"
 	"path/filepath"
 	"text/template"
@@ -30,7 +30,7 @@ func AddDefaultData(td *models.TemplateData, r *http.Request) *models.TemplateDa
 }
 
 //renderTemplates finds the templates
-func RenderTemplates(w http.ResponseWriter, r *http.Request, tmpl string, td *models.TemplateData) {
+func RenderTemplates(w http.ResponseWriter, r *http.Request, tmpl string, td *models.TemplateData) error {
 	var tc map[string]*template.Template
 	//render according to bool values in app.UseCache
 	if app.UseCache {
@@ -42,7 +42,7 @@ func RenderTemplates(w http.ResponseWriter, r *http.Request, tmpl string, td *mo
 	t, ok := tc[tmpl]
 
 	if !ok {
-		log.Fatal("Cant create temp")
+		return errors.New("cant get template from cache")
 	}
 	buf := new(bytes.Buffer)
 	td = AddDefaultData(td, r)
@@ -53,7 +53,9 @@ func RenderTemplates(w http.ResponseWriter, r *http.Request, tmpl string, td *mo
 
 	if err != nil {
 		fmt.Println("Error writing template to browser", err)
+		return err
 	}
+	return nil
 }
 
 //CreateTemplateCache creates a cache for the templates ?

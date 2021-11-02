@@ -12,6 +12,3 @@ test-main-win:
 
 test-main-unix:
 	go test -v ./cmd/web/ 
-
-test-handler-win:
-	go test -v .\internal\handlers\
