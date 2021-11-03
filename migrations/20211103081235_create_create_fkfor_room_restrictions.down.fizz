@@ -1,0 +1,1 @@
+drop_foreign_key("roomrestrictions","roomrestrictions_rooms_id_fk")
