@@ -72,3 +72,4 @@ func TestCreateTemplateCache(t *testing.T) {
 		t.Error(err)
 	}
 }
+ 
