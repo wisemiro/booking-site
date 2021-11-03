@@ -1,5 +1,4 @@
 .database.yml
-*database.yml
 migrations/*
 migrations
 migrations/
