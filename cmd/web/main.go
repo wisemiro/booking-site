@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"github.com/wycemiro/booking-site/internal/config"
+	"github.com/wycemiro/booking-site/internal/driver"
 	"github.com/wycemiro/booking-site/internal/handlers"
 	"github.com/wycemiro/booking-site/internal/models"
 	"github.com/wycemiro/booking-site/internal/renders"
@@ -22,10 +23,11 @@ var sessions *scs.SessionManager
 
 func main() {
 
-	err := run()
+	db, err := run()
 	if err != nil {
 		log.Fatal(err)
 	}
+	defer db.SQL.Close() //close database
 
 	//server
 	fmt.Printf("started server on localhost%s", port)
@@ -38,8 +40,11 @@ func main() {
 
 }
 
-func run() error {
+func run() (*driver.DB, error) {
 	gob.Register(models.Reservation{})
+	gob.Register(models.User{})
+	gob.Register(models.Room{})
+	gob.Register(models.Restriction{})
 
 	//config
 	app.InProduction = false //change to true in production, to change secure = true.
@@ -52,17 +57,25 @@ func run() error {
 	sessions.Cookie.SameSite = http.SameSiteLaxMode
 	app.Sessions = sessions
 
+	//connect to database
+	log.Println("Connecting to database...🍃")
+	db, err := driver.ConnectSQL("host=localhost port=5432 dbname=bookings user=api password=50451103aA")
+	if err != nil {
+		log.Fatal("Can't connect to the database ☠️")
+	}
+	log.Println("Connected to the database 🎉")
 	//templates
 	tc, err := renders.CreateTemplateCache()
 	if err != nil {
-		log.Fatal("Cant create cache", err)
+		log.Fatal("Cant create cache ❌", err)
+		return nil, err
 	}
 
 	app.TemplateCache = tc
 	app.UseCache = false //if set to true use cache on disk else=false read from file
-	renders.CreateTemplates(&app)
-	repo := handlers.NewRepo(&app)
+	renders.NewRenderer(&app)
+	repo := handlers.NewRepo(&app, db)
 	handlers.NewHandlers(repo)
 
-	return nil
+	return db, nil
 }

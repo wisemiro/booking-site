@@ -1,9 +1,11 @@
 package main
 
-import "testing"
+import (
+	"testing"
+)
 
 func TestRun(t *testing.T) {
-	err := run()
+	_, err := run()
 	if err != nil {
 		t.Errorf("failed to run")
 	}

@@ -14,6 +14,7 @@ import (
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/justinas/nosurf"
 	"github.com/wycemiro/booking-site/internal/config"
+	"github.com/wycemiro/booking-site/internal/driver"
 	"github.com/wycemiro/booking-site/internal/models"
 	"github.com/wycemiro/booking-site/internal/renders"
 )
@@ -46,9 +47,9 @@ func getRoutes() http.Handler {
 	app.TemplateCache = tc
 	app.UseCache = true //if set to true use cache on disk else=false read from file
 
-	repo := NewRepo(&app)
+	repo := NewRepo(&app, &driver.DB{})
 	NewHandlers(repo)
-	renders.CreateTemplates(&app)
+	renders.NewRenderer(&app)
 	mux := chi.NewRouter()
 	mux.Use(middleware.Recoverer, middleware.Logger, LoadSession)
 
