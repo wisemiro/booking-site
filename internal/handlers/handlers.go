@@ -4,10 +4,13 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
+	"strconv"
+	"time"
 
 	"github.com/wycemiro/booking-site/internal/config"
 	"github.com/wycemiro/booking-site/internal/driver"
 	"github.com/wycemiro/booking-site/internal/forms"
+	"github.com/wycemiro/booking-site/internal/helpers"
 	"github.com/wycemiro/booking-site/internal/models"
 	"github.com/wycemiro/booking-site/internal/renders"
 	"github.com/wycemiro/booking-site/internal/repository"
@@ -105,14 +108,38 @@ func (b *Repository) Reservation(w http.ResponseWriter, r *http.Request) {
 func (b *Repository) PostReservation(w http.ResponseWriter, r *http.Request) {
 	err := r.ParseForm()
 	if err != nil {
-		log.Fatal(err)
+		helpers.ServerError(w, err)
 	}
+	sd := r.Form.Get("start_date")
+	ed := r.Form.Get("end_date")
+
+	layout := "2006-01-02"
+
+	startDate, err := time.Parse(layout, sd)
+	if err != nil {
+		helpers.ServerError(w, err)
+	}
+	endDate, err := time.Parse(layout, ed)
+	if err != nil {
+		helpers.ServerError(w, err)
+	}
+
+	roomID, err := strconv.Atoi(r.Form.Get("room_id"))
+
+	if err != nil {
+		helpers.ServerError(w, err)
+	}
+
 	//pass user data from the form to the reservation model
 	reservation := models.Reservation{
 		FirstName: r.Form.Get("first_name"),
 		LastName:  r.Form.Get("last_name"),
 		Email:     r.Form.Get("email"),
+		StartDate: startDate,
+		EndDate:   endDate,
+		RoomID:    roomID,
 	}
+
 	form := forms.New(r.PostForm)
 
 	form.Required("first_name", "last_name", "email", "phone")
@@ -128,6 +155,12 @@ func (b *Repository) PostReservation(w http.ResponseWriter, r *http.Request) {
 		})
 		return
 	}
+
+	err = b.DB.InsertReservation(reservation)
+	if err != nil {
+		helpers.ServerError(w, err)
+	}
+	
 	b.App.Sessions.Put(r.Context(), "reservation", reservation)
 	http.Redirect(w, r, "/reservation-summary", http.StatusSeeOther)
 }
