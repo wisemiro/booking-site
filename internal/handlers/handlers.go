@@ -109,6 +109,7 @@ func (b *Repository) PostReservation(w http.ResponseWriter, r *http.Request) {
 	err := r.ParseForm()
 	if err != nil {
 		helpers.ServerError(w, err)
+		return
 	}
 	sd := r.Form.Get("start_date")
 	ed := r.Form.Get("end_date")
@@ -118,6 +119,7 @@ func (b *Repository) PostReservation(w http.ResponseWriter, r *http.Request) {
 	startDate, err := time.Parse(layout, sd)
 	if err != nil {
 		helpers.ServerError(w, err)
+		return
 	}
 	endDate, err := time.Parse(layout, ed)
 	if err != nil {
@@ -160,14 +162,20 @@ func (b *Repository) PostReservation(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		helpers.ServerError(w, err)
 	}
-	restriction :=models.RoomRestriction{
+	restriction := models.RoomRestriction{
 		RoomID:        roomID,
 		ReservationID: newReservationID,
 		RestrictionID: 1,
 		StartDate:     startDate,
 		EndDate:       endDate,
 	}
-	
+
+	err = b.DB.InstertRoomRestriction(restriction)
+	if err != nil {
+		helpers.ServerError(w, err)
+		return
+	}
+
 	b.App.Sessions.Put(r.Context(), "reservation", reservation)
 	http.Redirect(w, r, "/reservation-summary", http.StatusSeeOther)
 }

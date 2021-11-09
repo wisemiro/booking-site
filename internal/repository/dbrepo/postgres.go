@@ -4,7 +4,6 @@ import (
 	"context"
 	"time"
 
-	"github.com/jinzhu/gorm/dialects/postgres"
 	"github.com/wycemiro/booking-site/internal/models"
 )
 
@@ -41,4 +40,28 @@ func (m *postgresDBRepo) InsertReservation(res models.Reservation) (int, error) 
 	return newID, nil
 }
 
-func (m *postgresDBRepo) InstertRoomRestriction(r models.RoomRestriction){}
+func (m *postgresDBRepo) InstertRoomRestriction(r models.RoomRestriction) error {
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+
+	defer cancel()
+	stmt := `insert into room_restrictions (start_date, end_date, room_id, 
+		reservation_id, created_at, updated_at,restriction_id)
+		($1,$2,$3,$4,$5,$6,$7)
+	`
+	_, err := m.DB.ExecContext(ctx, stmt,
+		r.StartDate,
+		r.EndDate,
+		r.RoomID,
+		r.ReservationID,
+		time.Now(),
+		time.Now(),
+		r.RestrictionID,
+	)
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+
+}
