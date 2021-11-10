@@ -7,6 +7,7 @@ import (
 	"strconv"
 	"time"
 
+	"github.com/go-chi/chi/v5"
 	"github.com/wycemiro/booking-site/internal/config"
 	"github.com/wycemiro/booking-site/internal/driver"
 	"github.com/wycemiro/booking-site/internal/forms"
@@ -78,6 +79,7 @@ func (b *Repository) PostAvailability(w http.ResponseWriter, r *http.Request) {
 	endDate, err := time.Parse(layout, end)
 	if err != nil {
 		helpers.ServerError(w, err)
+		return
 	}
 
 	rooms, err := b.DB.SearchAvailabilityForAllRooms(startDate, endDate)
@@ -234,4 +236,21 @@ func (b *Repository) ReservationSummary(w http.ResponseWriter, r *http.Request) 
 	renders.Template(w, r, "reservation-summary.page.tmpl", &models.TemplateData{
 		Data: data,
 	})
+}
+
+func (b *Repository) ChooseRoom(w http.ResponseWriter, r *http.Request) {
+	roomID, err := strconv.Atoi(chi.URLParam(r, "id"))
+	if err != nil {
+		helpers.ServerError(w, err)
+		return
+	}
+
+	res, ok := b.App.Sessions.Get(r.Context(), "reservation").(models.Reservation)
+	if !ok {
+		helpers.ServerError(w, err)
+		return
+	}
+	res.RoomID = roomID
+	b.App.Sessions.Put(r.Context(), "reservation", res)
+	http.Redirect(w, r, "/make-reservation", http.StatusSeeOther)
 }
