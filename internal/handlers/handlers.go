@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"encoding/json"
+	"errors"
 	"log"
 	"net/http"
 	"strconv"
@@ -137,9 +138,18 @@ func (b *Repository) AvailabilityJson(w http.ResponseWriter, r *http.Request) {
 
 //Reservation renders reservation page
 func (b *Repository) Reservation(w http.ResponseWriter, r *http.Request) {
-	var emptyReservation models.Reservation
+	res, ok := b.App.Sessions.Get(r.Context(), "reservation").(models.Reservation)
+	if !ok {
+		helpers.ServerError(w, errors.New("cant get reservations from sessions"))
+		return
+	}
+	sd := res.StartDate.Format("2006-01-02")
+	ed := res.EndDate.Format("2006-01-02")
+	stringMap := make(map[string]string)
+	stringMap["start_date"] = sd
+	stringMap["end_date"] = ed
 	data := make(map[string]interface{})
-	data["reservation"] = emptyReservation
+	data["reservation"] = res
 	renders.Template(w, r, "make-reservation.page.tmpl", &models.TemplateData{
 		Form: forms.New(nil),
 		Data: data,

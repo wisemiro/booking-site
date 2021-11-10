@@ -9,7 +9,11 @@
                 {{$res := index .Data "reservation"}}
                 
                 <form method="post" action="/make-reservation" class="" novalidate>
+                
                     <input type="hidden" name="csrf_token" value="{{.CSRFToken}}">
+                    <input type="hidden" name="start_date", value="{{$res.StartDate}}">
+                    <input type="hidden" name="end_date", value="{{$res.EndDate}}">
+
                     <div class="form-group mt-3">
                         <label for="first_name">First Name:</label>
                         {{with .Form.Errors.Get "first_name"}}
