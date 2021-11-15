@@ -143,6 +143,12 @@ func (b *Repository) Reservation(w http.ResponseWriter, r *http.Request) {
 		helpers.ServerError(w, errors.New("cant get reservations from sessions"))
 		return
 	}
+	room, err := b.DB.GetRoomByID(res.RoomID)
+	if err != nil {
+		helpers.ServerError(w, err)
+		return
+	}
+	res.Room.RoomName = room.RoomName
 	sd := res.StartDate.Format("2006-01-02")
 	ed := res.EndDate.Format("2006-01-02")
 	stringMap := make(map[string]string)
