@@ -27,7 +27,13 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	defer db.SQL.Close() //close database
+	defer db.SQL.Close()      //close database
+	defer close(app.MailChan) //close mail channel
+
+	//listen for mail
+	fmt.Println("Starting mail ... 📧")
+	ListenForMail()
+	fmt.Println("Started mail 👌")
 
 	//server
 	fmt.Printf("started server on localhost%s", port)
@@ -45,6 +51,9 @@ func run() (*driver.DB, error) {
 	gob.Register(models.User{})
 	gob.Register(models.Room{})
 	gob.Register(models.Restriction{})
+
+	mailChan := make(chan models.MailData)
+	app.MailChan = mailChan
 
 	//config
 	app.InProduction = false //change to true in production, to change secure = true.

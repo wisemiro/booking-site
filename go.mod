@@ -27,4 +27,5 @@ require (
 	github.com/justinas/nosurf v1.1.1
 	github.com/lib/pq v1.10.3 // indirect
 	github.com/spf13/cobra v1.2.1 // indirect
+	github.com/xhit/go-simple-mail/v2 v2.10.0 // indirect
 )
