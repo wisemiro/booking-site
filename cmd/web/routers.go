@@ -1,9 +1,10 @@
 package main
 
 import (
+	"net/http"
+
 	"github.com/wycemiro/booking-site/internal/config"
 	"github.com/wycemiro/booking-site/internal/handlers"
-	"net/http"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
@@ -22,7 +23,8 @@ func routes(app *config.AppConfig) http.Handler {
 	mux.Get("/contact", handlers.Repo.Contact)
 
 	mux.Get("/majors-suite", handlers.Repo.Major)
-	mux.Get("/choose-room/{id}",handlers.Repo.ChooseRoom)
+	mux.Get("/choose-room/{id}", handlers.Repo.ChooseRoom)
+	mux.Get("/book-room", handlers.Repo.BookRoom)
 
 	mux.Get("/search-availability", handlers.Repo.SearchAvailability)
 	mux.Post("/search-availability", handlers.Repo.PostAvailability)

@@ -166,6 +166,7 @@ func (b *Repository) Reservation(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	res.Room.RoomName = room.RoomName
+
 	b.App.Sessions.Put(r.Context(), "reservation", res)
 	sd := res.StartDate.Format("2006-01-02")
 	ed := res.EndDate.Format("2006-01-02")
@@ -275,6 +276,30 @@ func (b *Repository) ChooseRoom(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	res.RoomID = roomID
+	b.App.Sessions.Put(r.Context(), "reservation", res)
+	http.Redirect(w, r, "/make-reservation", http.StatusSeeOther)
+}
+
+func (b *Repository) BookRoom(w http.ResponseWriter, r *http.Request) {
+	roomID, _ := strconv.Atoi(r.URL.Query().Get("id"))
+	sd := r.URL.Query().Get("s")
+	ed := r.URL.Query().Get("e")
+
+	layout := "2006-01-02"
+	startDate, _ := time.Parse(layout, sd)
+	endDate, _ := time.Parse(layout, ed)
+
+	var res models.Reservation
+	res.RoomID = roomID
+	res.StartDate = startDate
+	res.EndDate = endDate
+
+	room, err := b.DB.GetRoomByID(res.RoomID)
+	if err != nil {
+		helpers.ServerError(w, err)
+		return
+	}
+	res.Room.RoomName = room.RoomName
 	b.App.Sessions.Put(r.Context(), "reservation", res)
 	http.Redirect(w, r, "/make-reservation", http.StatusSeeOther)
 }
