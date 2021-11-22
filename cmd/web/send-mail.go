@@ -1,7 +1,10 @@
 package main
 
 import (
+	"fmt"
+	"io/ioutil"
 	"log"
+	"strings"
 	"time"
 
 	"github.com/wycemiro/booking-site/internal/models"
@@ -30,7 +33,20 @@ func sendMsg(m models.MailData) {
 		log.Println(err)
 	}
 	email := mail.NewMSG()
-	email.SetFrom(m.From).AddTo(m.To).SetSubject(m.Subject).SetBody(mail.TextHTML, m.Content)
+	email.SetFrom(m.From).AddTo(m.To).SetSubject(m.Subject)
+
+	if m.Template != "" {
+		email.SetBody(mail.TextHTML, m.Content)
+	} else {
+		data, err := ioutil.ReadFile(fmt.Sprintf("./email-template/%s", m.Template))
+		if err != nil {
+			log.Println(err)
+		}
+		mailTemplate := string(data)
+		msgToSend := strings.Replace(mailTemplate, "[%body%]", m.Content, 1)
+		email.SetBody(mail.TextHTML, msgToSend)
+	}
+
 	err = email.Send(client)
 	if err != nil {
 		log.Println(err)
